@@ -6,6 +6,7 @@ class UrlData(models.Model):
     url = models.CharField(max_length=200)
     slug = models.CharField(max_length=15, unique=True)
     click_count = models.PositiveIntegerField(default=0)
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.slug} ({self.user.username})"

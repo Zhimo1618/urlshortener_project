@@ -25,11 +25,11 @@ def create_short_url(request):
 
 @login_required
 def my_urls(request):
-    urls = UrlData.objects.filter(user=request.user)
+    urls = UrlData.objects.filter(user=request.user, is_deleted=False)
     return render(request, 'shortener/my_urls.html', {'urls': urls})
 
 def url_redirect(request, slug):
-    url_obj = get_object_or_404(UrlData, slug=slug)
+    url_obj = get_object_or_404(UrlData, slug=slug, is_deleted=False)
     ip = get_client_ip(request)
     ua = request.META.get('HTTP_USER_AGENT', '')
 
@@ -40,7 +40,7 @@ def url_redirect(request, slug):
 
 @login_required
 def url_stats(request, slug):
-    url_obj = get_object_or_404(UrlData, slug=slug, user=request.user)
+    url_obj = get_object_or_404(UrlData, slug=slug, user=request.user, is_deleted=False)
     clicks = url_obj.clicks.all().order_by('-click_time')
     return render(request, 'shortener/url_stats.html', {'url': url_obj, 'clicks': clicks})
 
@@ -49,7 +49,8 @@ def url_stats(request, slug):
 def delete_url(request, url_id):
     try:
         url = UrlData.objects.get(id=url_id, user=request.user)
-        url.delete()
+        url.is_deleted = True
+        url.save()
         return JsonResponse({'success': True})
     except UrlData.DoesNotExist:
         return JsonResponse({'success': False}, status=404)

@@ -18,6 +18,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = ['meeting-project.com','35.212.167.59','localhost','127.0.0.1']
+SHORTENER_DOMAIN = env('DOMAIN')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

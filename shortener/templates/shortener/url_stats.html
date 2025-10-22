@@ -2,8 +2,9 @@
 {% block title %}點擊統計{% endblock %}
 {% block content %}
 <div class="card shadow p-4">
-    <h4>{{ url.slug }} 的點擊記錄</h4><a href="{% url 'my_urls' %}" >返回</a>
-    <p><strong>原始網址：</strong> <a href="{{ url.url }}">{{ url.url }}</a></p>
+    <h4>{{ url.slug }} 的點擊記錄</h4>
+    <a class="btn btn-outline-secondary btn-sm col-1" href="{% url 'my_urls' %}" >返回</a>
+    <p><strong>原始網址：</strong> <a href="{{ url.url }}"target="blank">{{ url.url }}</a></p>
     <p><strong>總點擊：</strong> {{ url.click_count }}</p>
 
     <table class="table table-bordered mt-4">
@@ -22,7 +23,7 @@
             <td>{{ c.user_agent }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="2" class="text-center">尚無訪問紀錄</td></tr>
+        <tr><td colspan="3" class="text-center">尚無訪問紀錄</td></tr>
         {% endfor %}
         </tbody>
     </table>
