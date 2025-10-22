@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}點擊統計{% endblock %}
+{% block content %}
+<div class="card shadow p-4">
+    <h4>{{ url.slug }} 的點擊記錄</h4><a href="{% url 'my_urls' %}" >返回</a>
+    <p><strong>原始網址：</strong> <a href="{{ url.url }}">{{ url.url }}</a></p>
+    <p><strong>總點擊：</strong> {{ url.click_count }}</p>
+
+    <table class="table table-bordered mt-4">
+        <thead class="table-light">
+        <tr>
+            <th>訪問 IP</th>
+            <th>訪問時間</th>
+            <th>User-Agent</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in clicks %}
+        <tr>
+            <td>{{ c.ip_address }}</td>
+            <td>{{ c.click_time| date:"Y-m-d H:i:s" }}</td>
+            <td>{{ c.user_agent }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2" class="text-center">尚無訪問紀錄</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
