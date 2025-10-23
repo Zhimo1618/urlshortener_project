@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
@@ -37,6 +38,10 @@ def url_redirect(request, slug):
     url_obj.click_count += 1
     url_obj.save(update_fields=['click_count'])
     return redirect(url_obj.url)
+
+def custom_404_view(request, exception):
+    messages.warning(request, "您訪問的頁面不存在，已導向首頁")
+    return redirect('/')
 
 @login_required
 def url_stats(request, slug):

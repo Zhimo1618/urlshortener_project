@@ -4,6 +4,16 @@
 {% block title %}登入{% endblock %}
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        {% if 'warning' in message.tags %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
     <div class="card shadow-lg p-4 text-center" style="width: 22rem;">
         <h2 class="mb-3">縮網址服務</h2>
         <h3 class="mb-3">請登入系統</h3>
@@ -11,4 +21,18 @@
         <a href="{% provider_login_url 'google' %}" class="btn btn-danger">使用 Google 登入</a>
         <a href="{% provider_login_url 'facebook' %}" class="btn btn-primary">使用 Facebook 登入</a>
     </div>
+    <script>
+    // 等待 DOM 載入
+    document.addEventListener("DOMContentLoaded", function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+        // 3 秒後自動消失
+        setTimeout(() => {
+            // 使用 Bootstrap 5 的 Alert API
+            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            bsAlert.close();
+        }, 3000); // 1000ms = 1秒
+        });
+    });
+    </script>
 {% endblock %}

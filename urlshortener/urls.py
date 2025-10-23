@@ -6,3 +6,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('', include('shortener.urls')),
     ]
+
+handler404 = 'shortener.views.custom_404_view'
