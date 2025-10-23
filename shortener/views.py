@@ -42,7 +42,7 @@ def url_redirect(request, slug):  # 處理短網址跳轉的邏輯
 
 def custom_404_view(request, exception):  # 處理如果404的狀況將其回到首頁(登入頁/用戶短網址列表)
     if settings.APPEND_SLASH and not request.path.endswith('/'):
-        return None
+        return redirect('request.path' + '/')
     messages.warning(request, "您想連線的網址不存在或無權限，已導向首頁")
     return redirect('/')
 

@@ -10,7 +10,7 @@ class UrlForm(forms.ModelForm):
         model = UrlData
         fields = ['url']
 
-    def clean_url(self):
+    def clean_url(self):  # 確認網址本身是否為短網址
         url = self.cleaned_data['url']
         domain = settings.SHORTENER_DOMAIN.replace("https://", "").replace("http://", "")
 
@@ -20,7 +20,7 @@ class UrlForm(forms.ModelForm):
         return url
 
     def save(self, commit=True, user=None):
-        instance = super().save(commit=False)
+        instance = super().save(commit=False)  # 創建一個尚未commit的資料
         instance.slug = ''.join(get_random_string(length=6))
         if user:
             instance.user = user
