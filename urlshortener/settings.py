@@ -83,7 +83,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'urlshortener.wsgi.application'
 
-USE_CLOUD_SQL = env('CLOUDSQL')
+USE_CLOUD_SQL = env.bool('CLOUDSQL', default=True)
 
 def can_connect_postgres():
     try:
