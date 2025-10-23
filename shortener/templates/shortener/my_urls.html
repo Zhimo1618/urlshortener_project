@@ -1,6 +1,16 @@
 {% extends 'shortener_base.html' %}
 {% block title %}我的短網址{% endblock %}
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        {% if 'warning' in message.tags %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 <h3>我的短網址</h3>
 <a class="btn btn-secondary btn-sm col-1" href="{% url 'create_short_url' %}">建立新短網址</a>
 
@@ -44,6 +54,19 @@
     </div>
 </div>
 <script>
+// 等待 DOM 載入
+document.addEventListener("DOMContentLoaded", function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+    // 3 秒後自動消失
+    setTimeout(() => {
+        // 使用 Bootstrap 5 的 Alert API
+        const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+        bsAlert.close();
+        }, 3000); // 1000ms = 1秒
+    });
+    });
+
 // 顯示 Bootstrap Toast 的共用函式
 function showtoast(message, color="dark") {
     const toastEl = document.getElementById('liveToast');

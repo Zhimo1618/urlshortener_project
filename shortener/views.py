@@ -40,7 +40,7 @@ def url_redirect(request, slug):
     return redirect(url_obj.url)
 
 def custom_404_view(request, exception):
-    messages.warning(request, "您訪問的頁面不存在，已導向首頁")
+    messages.warning(request, "您訪問的頁面不存在，已導向登入頁")
     return redirect('/')
 
 @login_required
