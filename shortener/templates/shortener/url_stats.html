@@ -1,10 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'shortener_base.html' %}
 {% block title %}點擊統計{% endblock %}
 {% block content %}
 <div class="card shadow p-4">
     <h4>{{ url.slug }} 的點擊記錄</h4>
     <a class="btn btn-outline-secondary btn-sm col-1" href="{% url 'my_urls' %}" >返回</a>
-    <p><strong>原始網址：</strong> <a href="{{ url.url }}"target="blank">{{ url.url }}</a></p>
+    <p><strong>原始網址：</strong> <a href="{{ url.url }}" target="blank">{{ url.url }}</a></p>
     <p><strong>總點擊：</strong> {{ url.click_count }}</p>
 
     <table class="table table-bordered mt-4">

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+
+{% block title %}登入{% endblock %}
+
+{% block content %}
+    <div class="card shadow-lg p-4 text-center" style="width: 22rem;">
+        <h2 class="mb-3">縮網址服務</h2>
+        <h3 class="mb-3">請登入系統</h3>
+        <p class="text-muted mb-4">選擇以下方式登入：</p>
+        <a href="{% provider_login_url 'google' %}" class="btn btn-danger">使用 Google 登入</a>
+        <a href="{% provider_login_url 'facebook' %}" class="btn btn-primary">使用 Facebook 登入</a>
+    </div>
+{% endblock %}

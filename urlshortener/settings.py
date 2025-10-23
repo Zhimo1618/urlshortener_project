@@ -46,7 +46,6 @@ SITE_ID = 1
  # 設定登入重新導向的位置與未登入時要導入的位置
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = 'login'
 
  # 只用第三方登入
 ACCOUNT_EMAIL_VERIFICATION = 'none'
