@@ -8,14 +8,16 @@ from django.conf import settings
 from .models import UrlData, UrlClick
 from .forms import UrlForm
 
+
 def get_client_ip(request):  # 收集點擊短網址用戶的資料
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         return x_forwarded_for.split(',')[0].strip()
     return request.META.get('REMOTE_ADDR')
 
+
 @login_required
-def create_short_url(request): # 創建新的短網址
+def create_short_url(request):  # 創建新的短網址
     if request.method == 'POST':
         form = UrlForm(request.POST)
         if form.is_valid():
@@ -25,12 +27,14 @@ def create_short_url(request): # 創建新的短網址
         form = UrlForm()
     return render(request, 'shortener/create.html', {'form': form})
 
+
 @login_required
-def my_urls(request):  # 列出用戶創建的短網址列表
+def list_user_urls(request):  # 列出用戶創建的短網址列表
     urls = UrlData.objects.filter(user=request.user, is_deleted=False)
     return render(request, 'shortener/my_urls.html', {'urls': urls})
 
-def url_redirect(request, slug):  # 處理短網址跳轉的邏輯
+
+def redirect_url(request, slug):  # 處理短網址跳轉的邏輯
     url_obj = get_object_or_404(UrlData, slug=slug, is_deleted=False)
     ip = get_client_ip(request)
     ua = request.META.get('HTTP_USER_AGENT', '')
@@ -40,17 +44,20 @@ def url_redirect(request, slug):  # 處理短網址跳轉的邏輯
     url_obj.save(update_fields=['click_count'])
     return redirect(url_obj.url)
 
-def custom_404_view(request, exception):  # 處理如果404的狀況將其回到首頁(登入頁/用戶短網址列表)
+
+def handle_404_view(request, exception):  # 處理如果404的狀況將其回到首頁(登入頁/用戶短網址列表)
     if settings.APPEND_SLASH and not request.path.endswith('/'):
-        return redirect('request.path' + '/')
+        return redirect(request.path + '/')
     messages.warning(request, "您想連線的網址不存在或無權限，已導向首頁")
     return redirect('/')
 
+
 @login_required
-def url_stats(request, slug):  # 列出單一短網址的點擊資料(次數，紀錄等)
+def get_url_stats(request, slug):  # 列出單一短網址的點擊資料(次數，紀錄等)
     url_obj = get_object_or_404(UrlData, slug=slug, user=request.user, is_deleted=False)
     clicks = url_obj.clicks.all().order_by('-click_time')
     return render(request, 'shortener/url_stats.html', {'url': url_obj, 'clicks': clicks})
+
 
 @login_required
 @require_http_methods(["DELETE"])

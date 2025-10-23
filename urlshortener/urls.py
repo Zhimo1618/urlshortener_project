@@ -7,4 +7,4 @@ urlpatterns = [
     path('', include('shortener.urls')),  # 網址邏輯在shortener內處理
     ]
 
-handler404 = 'shortener.views.custom_404_view'
+handler404 = 'shortener.views.handle_404_view'

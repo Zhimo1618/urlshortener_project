@@ -9,11 +9,7 @@
     <div class="card shadow-lg p-4 text-center" style="width: 25rem;">
         <h3 class="text-danger mb-3">登入失敗</h3>
         <p class="text-muted mb-4">
-            {% if auth_error %}
-                {{ auth_error }}
-            {% else %}
-                無法完成登入，請重新嘗試或使用其他登入方式。
-            {% endif %}
+            無法完成登入，請重新嘗試或使用其他登入方式。
         </p>
         <a href="{% url 'account_login' %}" class="btn btn-secondary w-100">
             返回登入頁面

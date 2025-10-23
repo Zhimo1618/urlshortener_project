@@ -4,7 +4,7 @@
 
 <div class="card shadow p-4">
     <h4>建立短網址</h4>
-    <a class="btn btn-outline-secondary btn-sm col-1" href="{% url 'my_urls' %}" >返回</a>
+    <a class="btn btn-outline-secondary btn-sm col-1" href="{% url 'my_urls' %}" >取消</a>
     <form method="POST">
     {% csrf_token %}
     {{ form.url }}
