@@ -1,8 +1,9 @@
 import os
+import psycopg2
+import environ
 
 from pathlib import Path
 
-import environ
 
 
 
@@ -82,10 +83,39 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'urlshortener.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+USE_CLOUD_SQL = env('CLOUDSQL')
+
+connect_cloud_sql = False
+try:
+    conn = psycopg2.connect(
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT'),
+        connect_timeout=3  # 3 秒超時
+    )
+    conn.close()
+    connect_cloud_sql = True
+except Exception as e:
+    print(f"[Warning] Cloud SQL 無法連線，自動改用 SQLite。原因：{e}")
+
+if connect_cloud_sql and USE_CLOUD_SQL:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE'),
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / os.getenv('SQLITE_PATH', 'db.sqlite3'),
         }
     }
 

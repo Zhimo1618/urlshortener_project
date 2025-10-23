@@ -9,5 +9,3 @@ urlpatterns = [
     path('u/<slug:slug>/', views.url_redirect, name='url_redirect'),
     path('delete/<int:url_id>/', views.delete_url, name='delete_url'),
     ]
-
-handler404 = '.views.custom_404_view'
