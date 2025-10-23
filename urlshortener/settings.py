@@ -85,22 +85,23 @@ WSGI_APPLICATION = 'urlshortener.wsgi.application'
 
 USE_CLOUD_SQL = env('CLOUDSQL')
 
-connect_cloud_sql = False
-try:
-    conn = psycopg2.connect(
-        dbname=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD'),
-        host=os.getenv('DB_HOST'),
-        port=os.getenv('DB_PORT'),
-        connect_timeout=3  # 3 秒超時
-    )
-    conn.close()
-    connect_cloud_sql = True
-except Exception as e:
-    print(f"[Warning] Cloud SQL 無法連線，自動改用 SQLite。原因：{e}")
+def can_connect_postgres():
+    try:
+        conn = psycopg2.connect(
+            dbname=os.getenv('DB_NAME'),
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            host=os.getenv('DB_HOST'),
+            port=os.getenv('DB_PORT'),
+            connect_timeout=3  # 3 秒超時
+        )
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"[Warning] Cloud SQL 無法連線。原因：{e}")
+        return False
 
-if connect_cloud_sql and USE_CLOUD_SQL:
+if USE_CLOUD_SQL and can_connect_postgres():
     DATABASES = {
         'default': {
             'ENGINE': os.getenv('DB_ENGINE'),
