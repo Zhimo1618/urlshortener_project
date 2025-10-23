@@ -83,9 +83,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'urlshortener.wsgi.application'
 
-USE_CLOUD_SQL = env.bool('CLOUDSQL', default=True)
+USE_CLOUD_SQL = env.bool('CLOUDSQL', default=False)
 
-def can_connect_postgres():
+def can_connect_postgres():  # 試著連線到雲端SQL，若失敗回傳False
     try:
         conn = psycopg2.connect(
             dbname=os.getenv('DB_NAME'),
@@ -101,7 +101,7 @@ def can_connect_postgres():
         print(f"[Warning] Cloud SQL 無法連線。原因：{e}")
         return False
 
-if USE_CLOUD_SQL and can_connect_postgres():
+if USE_CLOUD_SQL and can_connect_postgres():  # 讀變數與連線來決定要用本地端sqlite還是雲端
     DATABASES = {
         'default': {
             'ENGINE': os.getenv('DB_ENGINE'),
