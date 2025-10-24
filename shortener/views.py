@@ -60,7 +60,8 @@ def handle_404_view(request, exception):  # 處理如果404的狀況將其回到
 def get_url_stats(request, slug):  # 列出單一短網址的點擊資料(次數，紀錄等)
     url_obj = get_object_or_404(UrlData, slug=slug, user=request.user, is_deleted=False)
     clicks = url_obj.clicks.all().order_by('-click_time')
-    return render(request, 'shortener/url_stats.html', {'url': url_obj, 'clicks': clicks})
+    click_count = clicks.count()
+    return render(request, 'shortener/url_stats.html', {'url': url_obj, 'clicks': clicks, 'click_count': click_count, })
 
 
 @login_required
