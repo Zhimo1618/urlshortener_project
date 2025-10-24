@@ -5,6 +5,8 @@ from urllib.parse import urlparse
 
 from .models import UrlData
 
+ALLOWED_CHARS = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+
 
 class UrlForm(forms.ModelForm):
     class Meta:
@@ -22,9 +24,9 @@ class UrlForm(forms.ModelForm):
 
     def save(self, commit=True, user=None):
         instance = super().save(commit=False)  # 創建一個尚未commit的資料
-        slug = ''.join(get_random_string(length=6))
-        while UrlData.objects.filter(slug=slug):  # 去查這個 slug 是否有碰撞，有的話產一個新的
-            slug = ''.join(get_random_string(length=6))
+        slug = get_random_string(length=6, allowed_chars=ALLOWED_CHARS)
+        while UrlData.objects.filter(slug=slug).exists():  # 去查這個 slug 是否有碰撞，有的話產一個新的
+            slug = get_random_string(length=6, allowed_chars=ALLOWED_CHARS)
         instance.slug = slug
         if user:
             instance.user = user

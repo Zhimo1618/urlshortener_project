@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
 from django.conf import settings
+from django.db.models import Count
 
 from .models import UrlData, UrlClick
 from .forms import UrlForm
@@ -29,8 +30,13 @@ def create_short_url(request):  # 創建新的短網址
 
 
 @login_required
-def list_user_urls(request):  # 列出用戶創建的短網址列表
-    urls = UrlData.objects.filter(user=request.user, is_deleted=False)
+def list_user_urls(request):  # 列出用戶創建的短網址列表  # TODO 確認要用甚麼邏輯
+    urls = UrlData.objects.filter(
+        user=request.user,
+        is_deleted=False
+    ).annotate(
+        total_clicks=Count('clicks')
+    ).order_by('id')
     return render(request, 'shortener/my_urls.html', {'urls': urls})
 
 
@@ -40,9 +46,7 @@ def redirect_url(request, slug):  # 處理短網址跳轉的邏輯
     ua = request.META.get('HTTP_USER_AGENT', '')
 
     UrlClick.objects.create(url=url_obj, ip_address=ip, user_agent=ua)
-    url_obj.click_count += 1
-    url_obj.save(update_fields=['click_count'])
-    return redirect(url_obj.url)
+    return redirect(url_obj.url, permanent=False)
 
 
 def handle_404_view(request, exception):  # 處理如果404的狀況將其回到首頁(登入頁/用戶短網址列表)
