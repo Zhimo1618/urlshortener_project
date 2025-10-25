@@ -20,6 +20,14 @@ class UrlForm(forms.ModelForm):
         parsed = urlparse(url)
         if parsed.netloc == domain and parsed.path.startswith('/u/'):
             raise forms.ValidationError("這個網址已經是短網址了，不能再縮一次！")
+        hostname = parsed.hostname
+        if hostname:
+            hostname_lower = hostname.lower()
+
+            # 封鎖 localhost
+            if hostname_lower in ['localhost', '127.0.0.1', '0.0.0.0', '::1']:
+                raise forms.ValidationError("不允許使用本機 URL")
+
         return url
 
     def save(self, commit=True, user=None):
