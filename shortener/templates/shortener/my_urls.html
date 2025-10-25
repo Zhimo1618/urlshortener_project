@@ -82,7 +82,7 @@ function copytoclipboard(elementId, event) {
     const el = document.getElementById(elementId);
     const slug = el.innerText.trim();
     const baseUrl = window.location.origin;
-    const fullUrl = `${baseUrl}/u/${slug}`;
+    const fullUrl = `${baseUrl}/u/${slug}/`;
 
     navigator.clipboard.writeText(fullUrl).then(() => {
         showtoast(`已複製：${fullUrl}`, "success");

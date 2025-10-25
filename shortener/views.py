@@ -30,12 +30,12 @@ def create_short_url(request):  # 創建新的短網址
 
 
 @login_required
-def list_user_urls(request):  # 列出用戶創建的短網址列表  # TODO 確認要用甚麼邏輯
+def list_user_urls(request):  # 列出用戶創建的短網址列表
     urls = UrlData.objects.filter(
         user=request.user,
         is_deleted=False
     ).annotate(
-        total_clicks=Count('clicks')
+        total_clicks=Count('clicks')  # 多 annotate 一個點擊數
     ).order_by('id')
     return render(request, 'shortener/my_urls.html', {'urls': urls})
 
@@ -50,7 +50,7 @@ def redirect_url(request, slug):  # 處理短網址跳轉的邏輯
 
 
 def handle_404_view(request, exception):  # 處理如果404的狀況將其回到首頁(登入頁/用戶短網址列表)
-    if settings.APPEND_SLASH and not request.path.endswith('/'):
+    if settings.APPEND_SLASH and not request.path.endswith('/'):  # 如果是沒斜線的狀況加斜線重導向
         return redirect(request.path + '/')
     messages.warning(request, "您想連線的網址不存在或無權限，已導向首頁")
     return redirect('/')

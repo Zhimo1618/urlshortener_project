@@ -1,5 +1,5 @@
 import os
-# import psycopg2
+# import psycopg2  # 預設用postgreSQL，有開雲端SQL的話把這邊註解改掉
 import environ
 
 from pathlib import Path
@@ -81,7 +81,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'urlshortener.wsgi.application'
 
-
+# 如果要用雲端資料庫的話用這邊，並在 .env 檔修改變數
 # DATABASES = {
 #     'default': {
 #         'ENGINE': env('DB_ENGINE'),
