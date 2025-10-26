@@ -19,6 +19,10 @@ class UrlClick(models.Model):
     click_time = models.DateTimeField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True)
+    user_browser = models.CharField(blank=True)
+    user_os = models.CharField(blank=True)
+    user_device = models.CharField(blank=True)
+    user_is_mobile = models.BooleanField()
 
     def __str__(self):
         return f"{self.url.slug} clicked at {self.click_time}"

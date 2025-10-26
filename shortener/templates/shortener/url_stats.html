@@ -12,7 +12,10 @@
         <tr>
             <th>訪問 IP</th>
             <th>訪問時間</th>
-            <th>User-Agent</th>
+            <th>使用裝置</th>
+            <th>使用系統</th>
+            <th>使用瀏覽器</th>
+            <th>是否為手機</th>
         </tr>
         </thead>
         <tbody>
@@ -20,10 +23,13 @@
         <tr>
             <td>{{ c.ip_address }}</td>
             <td>{{ c.click_time| date:"Y-m-d H:i:s" }}</td>
-            <td>{{ c.user_agent }}</td>
+            <td>{{ c.user_device }}</td>
+            <td>{{ c.user_os }}</td>
+            <td>{{ c.user_browser }}</td>
+            <td>{{ c.user_is_mobile }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="3" class="text-center">尚無訪問紀錄</td></tr>
+        <tr><td colspan="5" class="text-center">尚無訪問紀錄</td></tr>
         {% endfor %}
         </tbody>
     </table>

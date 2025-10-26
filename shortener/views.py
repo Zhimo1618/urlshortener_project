@@ -5,6 +5,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
 from django.conf import settings
 from django.db.models import Count
+from user_agents import parse
 
 from .models import UrlData, UrlClick
 from .forms import UrlForm
@@ -44,8 +45,23 @@ def redirect_url(request, slug):  # 處理短網址跳轉的邏輯
     url_obj = get_object_or_404(UrlData, slug=slug, is_deleted=False)
     ip = get_client_ip(request)
     ua = request.META.get('HTTP_USER_AGENT', '')
-
-    UrlClick.objects.create(url=url_obj, ip_address=ip, user_agent=ua)
+    user_agent = parse(ua)
+    if user_agent.is_mobile:
+        device = 'mobile'
+    elif user_agent.is_pc:
+        device = "PC"
+    elif user_agent.is_tablet:
+        device = "tablet"
+    else:
+        device = "others"
+    UrlClick.objects.create(url=url_obj,
+                            ip_address=ip,
+                            user_agent=ua,
+                            user_browser=user_agent.browser.family,
+                            user_os=user_agent.os.family,
+                            user_device=device,
+                            user_is_mobile=user_agent.is_mobile
+                            )
     return redirect(url_obj.url, permanent=False)
 
 
