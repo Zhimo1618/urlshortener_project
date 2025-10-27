@@ -11,39 +11,16 @@ from .models import UrlData, UrlClick
 from .forms import UrlForm
 
 
-def get_client_ip(request):  # 收集點擊短網址用戶的資料
+def _get_client_ip(request):  # 收集點擊短網址用戶的資料 redirect_url會用到
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         return x_forwarded_for.split(',')[0].strip()
     return request.META.get('REMOTE_ADDR')
 
 
-@login_required
-def create_short_url(request):  # 創建新的短網址
-    if request.method == 'POST':
-        form = UrlForm(request.POST)
-        if form.is_valid():
-            form.save(user=request.user)
-            return redirect('my_urls')
-    else:
-        form = UrlForm()
-    return render(request, 'shortener/create.html', {'form': form})
-
-
-@login_required
-def list_user_urls(request):  # 列出用戶創建的短網址列表
-    urls = UrlData.objects.filter(
-        user=request.user,
-        is_deleted=False
-    ).annotate(
-        total_clicks=Count('clicks')  # 多 annotate 一個點擊數
-    ).order_by('id')
-    return render(request, 'shortener/my_urls.html', {'urls': urls})
-
-
 def redirect_url(request, slug):  # 處理短網址跳轉的邏輯
     url_obj = get_object_or_404(UrlData, slug=slug, is_deleted=False)
-    ip = get_client_ip(request)
+    ip = _get_client_ip(request)
     ua = request.META.get('HTTP_USER_AGENT', '')
     user_agent = parse(ua)
     if user_agent.is_mobile:
@@ -90,3 +67,26 @@ def delete_url(request, url_id):  # 將用戶創建的短網址軟刪除(不會�
         return JsonResponse({'success': True})
     except UrlData.DoesNotExist:
         return JsonResponse({'success': False}, status=404)
+
+
+@login_required
+def create_short_url(request):  # 創建新的短網址
+    if request.method == 'POST':
+        form = UrlForm(request.POST)
+        if form.is_valid():
+            form.save(user=request.user)
+            return redirect('my_urls')
+    else:
+        form = UrlForm()
+    return render(request, 'shortener/create.html', {'form': form})
+
+
+@login_required
+def list_user_urls(request):  # 列出用戶創建的短網址列表
+    urls = UrlData.objects.filter(
+        user=request.user,
+        is_deleted=False
+    ).annotate(
+        total_clicks=Count('clicks')  # 多 annotate 一個點擊數
+    ).order_by('id')
+    return render(request, 'shortener/my_urls.html', {'urls': urls})

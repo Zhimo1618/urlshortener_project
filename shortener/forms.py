@@ -32,7 +32,7 @@ class UrlForm(forms.ModelForm):
 
     def save(self, commit=True, user=None):
         instance = super().save(commit=False)  # 創建一個尚未commit的資料
-        slug = get_random_string(length=6, allowed_chars=ALLOWED_CHARS)
+        slug = get_random_string(length=6, allowed_chars=ALLOWED_CHARS)  # 把 0/O/1/l/I 給去除 避免短網址混淆
         while UrlData.objects.filter(slug=slug).exists():  # 去查這個 slug 是否有碰撞，有的話產一個新的
             slug = get_random_string(length=6, allowed_chars=ALLOWED_CHARS)
         instance.slug = slug

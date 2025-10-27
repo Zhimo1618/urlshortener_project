@@ -7,7 +7,6 @@
 - Google / Facebook 第三方登入
 - 快速建立短網址
 - 點擊統計與來源 IP 追蹤
-- 個人化管理介面
 
 ## 技術架構
 - Backend: Django 4.2
@@ -24,18 +23,23 @@ pip install -r requirements.txt
 
 ### 2. 設定環境變數
 建立 `.env` 檔案：
+```
+DEBUG=on
+SECRET_KEY=your-secretkey
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_secret
 FACEBOOK_CLIENT_ID=your_facebook_client_id
 FACEBOOK_CLIENT_SECRET=your_facebook_secret
+```
 如果有用雲端資料庫:
+```
 DB_ENGINE=your-backend-engine
 DB_NAME=your-DB-name
 DB_USER=your-user-name
 DB_PASSWORD=your-password
 DB_HOST=your-host
 DB_PORT=your-port
-
+```
 ### 3. 資料庫遷移
 ```
 python manage.py migrate
@@ -67,7 +71,7 @@ python manage.py runserver
 4. 設定有效的 OAuth 重新導向 URI: `http://localhost:8000/accounts/facebook/login/callback/`
 
 ## 專案結構
-urlshortener_project/
+urlshortener_project/\
 ├── shortener/          # 主要應用程式\
 │   ├── forms.py        # 表格邏輯\
 │   ├── models.py       # 資料模型\
